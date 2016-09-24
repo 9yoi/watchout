@@ -73,12 +73,24 @@ d3.select('svg')
 var colliding = false;
 //randomize dots at set interval
 setInterval(function() {
-  var colliders = d3.range(20).map(function() { return [Math.random() * height, Math.random() * width]; });
+  var colliders = d3.range(20).map(function() { return [Math.random() * width, Math.random() * height]; });
   d3.select('body')
   .selectAll('circle')
   .data(colliders)
   .transition().duration(2500)
   .attr('transform', function (d) { return 'translate(' + d + ')'; });  
+  if ( height !== innerHeight - 150) {
+    height = innerHeight - 150;
+
+
+  }
+  if ( width !== innerWidth - 20) {
+    width = innerWidth - 20;
+    d3.select('svg')
+      .attr('height', height)
+      .attr('width', width);    
+  }
+
 }, 2500);
 
 // updating score and detecting collisions
