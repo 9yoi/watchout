@@ -7,11 +7,33 @@ var collisions = 0;
 var highScore = 0;
 
 //initialize colliders
-//var colliders = d3.range(20).map(function() { return [Math.random() * height, Math.random() * width]; });
-var colliders = d3.range(20).map(function() { return Math.random(); });
+var colliders = d3.range(20).map(function() { return [Math.random() * height, Math.random() * width]; });
+//var colliders = d3.range(20).map(function() { return Math.random(); });
 var player = [{x: height / 2, y: width / 2}];
 
 
+var collide = function () {
+  collisions++;
+    
+  d3.select('body')
+    .select('.collisions')
+    .text('Collisions: ' + collisions);
+
+
+  if (score > highScore) {
+    highScore = score;
+  }
+
+  score = 0;
+
+  d3.select('body')
+    .select('.current')
+    .text('Current score: ' + score);
+      
+  d3.select('body')
+    .select('.highscore')
+    .text('High score: ' + highScore);
+};
 var drag = d3.behavior.drag().on('drag', function (d) {
   // d3.select(this).attr('cx', d.x = d3.event.x).attr('cy', d.y = d3.event.y);
   var loc = d3.mouse(this);
@@ -26,9 +48,9 @@ d3.select('.board')
   .selectAll('circle')
   .data(colliders)
   .enter().append('circle')
+  .attr('cx', 0)
+  .attr('cy', 0)
   .attr('transform', function (d) { return 'translate(' + d + ')'; })
-  // .attr('cx', Math.random() * height)
-  // .attr('cy', Math.random() * width)
   .attr('r', 24)
   .attr('class', 'enemy')
   .style('fill', d3.rgb(10, 10, 210));
@@ -47,18 +69,8 @@ d3.select('svg')
   .attr('class', 'player')
   .style('fill', d3.rgb(210, 10, 10))
   .call(drag);
-
-
-// var clicked = function () {
-//   console.log('clicked');
-// };
-
-// d3.select('player')
-//   .call(drag);
-
-
  
-
+var colliding = false;
 //randomize dots at set interval
 setInterval(function() {
   var colliders = d3.range(20).map(function() { return [Math.random() * height, Math.random() * width]; });
@@ -67,13 +79,37 @@ setInterval(function() {
   .data(colliders)
   .transition().duration(2500)
   .attr('transform', function (d) { return 'translate(' + d + ')'; });  
-
 }, 2500);
 
+// updating score and detecting collisions
 setInterval(function() {
   score++;
+  var enemies = [];
   d3.select('body')
     .select('.current')
     .text('Current score: ' + score);
-}, 100);
+  d3.selectAll('.enemy').each(function(d) {
+    enemies.push(d3.select(this).attr('transform'));
+  });
+  var playerloc = [d3.select('.player').attr('cx'), d3.select('.player').attr('cy')]; 
+  var coordinates = enemies.map(function(translate) { return translate.slice(10).split(','); });
+  
+  coordinates.forEach(function(coordinate) {
+    var x = Number(coordinate[0].slice(0,5)) - Number(playerloc[0]);
+    var y = Number(coordinate[1].slice(0,5)) - Number(playerloc[1]);
+    
+    if (Math.abs(x) < 48 && Math.abs(y) < 48) {
+      if (colliding === false){
+        collide();
+      }
+      colliding = true;
+    } else {
+      colliding = false;
+    }
+  });
+
+
+}, 500);
+
+
 
