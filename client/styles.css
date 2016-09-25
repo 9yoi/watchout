@@ -1,8 +1,18 @@
 /* your beautiful css styling goes here! */
+body {
+  background-image: url('http://wallpapercave.com/wp/BXc1IXP.jpg');
+}
+.scoreboard {
+  float: right;
+  background-color: white;
+}
 
-.scoreboard body {
-  background-color: yellow;
+.board {
+
 }
 /* Note: an asteroid image is included in this repo.
 Feel free to use it if you like. */
 
+/*.player {
+  animation: rotating 4s linear infinite;
+}*/
