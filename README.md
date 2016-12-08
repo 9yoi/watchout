@@ -1,2 +1,1 @@
-#watchout
-This is a project I completed as a student at [hackreactor](http://hackreactor.com). This project was worked on with a pair.
+Exploring D3 - Built screen with a mouse controlled player and enemies to collide into
